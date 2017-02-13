@@ -12,10 +12,16 @@
     "webpack": "^2.2.1",
     "webpack-dev-server": "^2.3.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/mocha": "^2.2.39",
+    "@types/node": "^7.0.5",
+    "html-webpack-plugin": "^2.28.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev-server": "webpack-dev-server --hot"
+    "dev-server": "webpack-dev-server --hot",
+    "webpack": "webpack",
+    "tsc": "tsc"
   },
   "keywords": [],
   "author": "",

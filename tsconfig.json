@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "strictNullChecks": true,
+        "outDir": "./js",
+        "sourceMap": true,
+        "noImplicitAny": true,
+        "module": "commonjs",
+        "target": "es6",
+        "moduleResolution": "node",
+        "types": [ "node", "mocha" ],
+        "allowSyntheticDefaultImports": true,
+        "jsx": "react"
+    }
+}
