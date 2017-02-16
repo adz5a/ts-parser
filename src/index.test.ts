@@ -1,4 +1,4 @@
-import { item, seq, mp, plus, pplus, zero, sat } from "./index";
+import { item, seq, mp, plus, pplus, zero, sat, char } from "./index";
 import { deepEqual, ok } from "assert";
 
 describe("parser.item", function () {
@@ -8,6 +8,14 @@ describe("parser.item", function () {
         const result = item("hello");
         ok( result.length === 1 );
         deepEqual( result[0], ["h", "ello"]);
+    
+    });
+
+    it ("should fail on empty string", function () {
+    
+        const result = item("");
+        ok( result.length === 0);
+        deepEqual( result, [] );
     
     });
 
@@ -108,6 +116,32 @@ describe("parser.sat", function () {
         const parser = sat( x => false );
         const res = parser("hello");
         ok(res.length === 0);
+    
+    });
+
+});
+
+describe("parser.char", function () {
+
+    it("should parse the char", function () {
+    
+        const parser = char("h");
+        const res = parser("hello");
+        
+        ok( res.length === 1 );
+        deepEqual(
+            res[0],
+            [ "h", "ello" ]
+        );
+    
+    });
+
+    it("should fail to parse without the char", function () {
+    
+        const parser = char("e");
+        const res = parser("hello");
+
+        ok( res.length === 0 );
     
     });
 

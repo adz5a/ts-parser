@@ -123,3 +123,9 @@ export function sat ( f:( (cs: string) => boolean ) ) : Parser<string> {
     });
 
 }
+
+export function char ( charString : string ) : Parser<string> {
+
+    return sat( x => x === charString );
+
+};
