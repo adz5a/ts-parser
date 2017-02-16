@@ -99,4 +99,27 @@ export function pplus <A> ( a: Parser<A>, b: Parser<A> ) : Parser<A> {
 
 };
 
-export const zero = mp( (cs: string) => [] );
+export function zero <T> () {
+
+    return mp<T>( cs => [] );
+
+};
+
+export function sat ( f:( (cs: string) => boolean ) ) : Parser<string> {
+
+    return mp( cs => {
+    
+        const result = item(cs);
+        if (result.length === 0) {
+        
+            return []; 
+        
+        } else {
+        
+            return result.filter( res => f(res[0]) ); 
+        
+        }
+    
+    });
+
+}

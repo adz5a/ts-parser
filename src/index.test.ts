@@ -1,4 +1,4 @@
-import { item, seq, mp, plus, pplus, zero } from "./index";
+import { item, seq, mp, plus, pplus, zero, sat } from "./index";
 import { deepEqual, ok } from "assert";
 
 describe("parser.item", function () {
@@ -78,10 +78,36 @@ describe("parser.pplus", function () {
 describe("parser.zero", function () {
 
     it("should always fail", function () {
-    
-        const result = zero("hello");
+   
+        const parser = zero();
+        const result = parser("hello");
         ok(result.length === 0);
         deepEqual( result, [] );
+    
+    });
+
+});
+
+describe("parser.sat", function () {
+
+    it("should parse when predicate is matched", function () {
+    
+        const parser = sat( x => x === "h" );
+        const res = parser("hello");
+        ok( res.length === 1 );
+        deepEqual( 
+                  res[0],
+                  [ "h", "ello" ]
+                 );
+
+    
+    });
+
+    it("should fail when predicate not matched", function () {
+    
+        const parser = sat( x => false );
+        const res = parser("hello");
+        ok(res.length === 0);
     
     });
 
