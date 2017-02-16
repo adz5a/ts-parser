@@ -30,7 +30,7 @@ export const item : IParser<string> = function ( cs : string ) {
 
 }
 
-export const unit = function <A> ( a: A ) {
+export const unit = function <A> ( a: A ) : Parser<A> {
 
     return ( cs: string ) => [ [a, cs] ];
 
@@ -64,3 +64,9 @@ export function mp <A> ( p: IParser<A> ) : Parser<A> {
     return <Parser<A>>p;
 
 }
+
+export function seq <A, B> ( a: Parser<A>, b: Parser<B> ) : Parser<[A, B]> {
+
+    return a.bind( x => b.bind( y => unit( <[A, B]>[x,y] ) ));
+
+};
