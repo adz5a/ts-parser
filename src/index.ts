@@ -70,3 +70,33 @@ export function seq <A, B> ( a: Parser<A>, b: Parser<B> ) : Parser<[A, B]> {
     return a.bind( x => b.bind( y => unit( <[A, B]>[x,y] ) ));
 
 };
+
+export function plus <A> ( a: Parser<A>, b: Parser<A> ) : Parser<A> {
+
+    return mp( cs => a(cs).concat(b(cs)) );
+
+};
+
+export function pplus <A> ( a: Parser<A>, b: Parser<A> ) : Parser<A> {
+
+    const parser = plus(a, b);
+
+    return mp( cs => {
+    
+        const res = parser(cs);
+      
+        if (res.length === 0) {
+        
+            return [];    
+      
+        } else {
+        
+            return [ res[0] ]; 
+        
+        }
+    
+    } );
+
+};
+
+export const zero = mp( (cs: string) => [] );

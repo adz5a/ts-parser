@@ -18,3 +18,8 @@ In this repo the monad we are working with is the **Parser** monad. For a given 
 **A** it returns a parser function. 
 
 The parser has the following signature : ` Parser <A> : String -> [ ( a : A ) ] `
+
+
+## Parser combinators
+
+
