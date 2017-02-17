@@ -145,4 +145,13 @@ describe("parser.char", function () {
     
     });
 
+    it("should return no results for empty string", function () {
+    
+        const parser = char("");
+        const res = parser("hello");
+
+        ok( res.length === 0 );
+    
+    });
+
 });
