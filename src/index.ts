@@ -4,7 +4,7 @@
  * Takes a string and returns an array with first member the
  * result of the parsing and second the string left to parse
  */
-interface IParser<A> {
+export interface IParser<A> {
 
     (cs: string): [A, string][]
 
@@ -16,31 +16,19 @@ export interface Parser<A> extends IParser<A> {
 
 }
 
-export const item : IParser<string> = function ( cs : string ) {
-
-    if (cs.length) {
-    
-        return [[cs[0], cs.slice(1)]]; 
-    
-    } else {
-    
-        return []; 
-    
-    }
-
-}
+export const item = mp( (cs: string) => cs.length ? [ [cs[0], cs.slice(1)] ] : []);
 
 export const unit = function <A> ( a: A ) : Parser<A> {
 
-    return ( cs: string ) => [ [a, cs] ];
+    return mp(( cs: string ) => [ [a, cs] ]);
 
 }
 
-export const bind = function _bind <A, B> ( p: Parser<A> ) {
+export function bind <A, B> ( p: Parser<A> ) {
 
     return function ( f: (a: A) => Parser<B> ) : Parser<B> {
     
-        return function ( cs: string ) {
+        return function ( cs: string ) : [ B, string ][] {
         
             return concat( p(cs).map( (res: [ A, string ]) => f(res[0])(res[1]))); 
         
@@ -59,7 +47,7 @@ export const concat = [].concat.apply.bind( [].concat, [] );
  */
 export function mp <A> ( p: IParser<A> ) : Parser<A> {
 
-    p.bind = bind( p );
+    p.bind = f => mp( bind(p)(f) );
 
     return <Parser<A>>p;
 
@@ -127,5 +115,17 @@ export function sat ( f:( (cs: string) => boolean ) ) : Parser<string> {
 export function char ( charString : string ) : Parser<string> {
 
     return sat( x => x === charString );
+
+};
+
+export function string ( s: string ) : any {
+
+    if ( s.length === 0 ) {
+    
+        return unit( "" ); 
+    
+    } else {
+        return char(s[0]).bind( c => string(s.slice(1)).bind((cs: string) => unit( c + cs )));
+    }
 
 };

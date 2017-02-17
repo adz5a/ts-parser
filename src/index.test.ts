@@ -1,4 +1,4 @@
-import { item, seq, mp, plus, pplus, zero, sat, char } from "./index";
+import { Parser, item, seq, mp, plus, pplus, zero, sat, char, string } from "./index";
 import { deepEqual, ok } from "assert";
 
 describe("parser.item", function () {
@@ -151,6 +151,44 @@ describe("parser.char", function () {
         const res = parser("hello");
 
         ok( res.length === 0 );
+    
+    });
+
+    it("can generate parser for every char in a string", function () {
+    
+        const s = "hello";
+        const parsers = s.split("").map(char);
+
+        parsers.forEach((parser, index) => {
+        
+        
+            const res = parser(s[index]);
+            ok( res.length === 1 );
+            deepEqual(
+                res[0],
+                [ s[index], "" ]
+            );
+        
+        });
+    
+    });
+
+});
+
+describe("parser.string", function () {
+
+    it("should parse a string", function () {
+  
+        const parser = string("hello");
+
+        const result = parser("helloWorld");
+
+        console.log( result.length );
+        ok(result.length === 1);
+        deepEqual(
+            result[0],
+            [ "hello", "World" ]
+        );
     
     });
 
