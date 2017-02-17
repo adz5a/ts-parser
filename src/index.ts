@@ -125,7 +125,13 @@ export function string ( s: string ) : any {
         return unit( "" ); 
     
     } else {
-        return char(s[0]).bind( c => string(s.slice(1)).bind((cs: string) => unit( c + cs )));
+        const charParsers = s.split("").map(char);
+        return charParsers.slice(1)
+                .reduce(( parser, charParser ) => {
+                
+                    return parser.bind( c => charParser.bind( d => unit( c + d ))); 
+                
+                }, charParsers[0]);
     }
 
 };

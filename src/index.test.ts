@@ -192,4 +192,26 @@ describe("parser.string", function () {
     
     });
 
+    it("should fail if the string is not here", function () {
+    
+        const parser = string("hello");
+        const result = parser("heloWorld");
+
+        ok( result.length === 0 );
+    
+    });
+
+    it("should return empty string for empty string", function () {
+    
+        const parser = string("");
+        const result = parser("hello");
+        ok( result.length === 1 );
+
+        deepEqual(
+            result[0],
+            [ "", "hello" ]
+        );
+    
+    });
+
 });
