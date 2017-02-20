@@ -18,7 +18,7 @@ export interface Parser<A> extends IParser<A> {
 
 export const item = mp( (cs: string) => cs.length ? [ [cs[0], cs.slice(1)] ] : []);
 
-export const unit = function <A> ( a: A ) : Parser<A> {
+export function unit <A> ( a: A ) : Parser<A> {
 
     return mp(( cs: string ) => [ [a, cs] ]);
 
@@ -133,5 +133,29 @@ export function string ( s: string ) : any {
                 
                 }, charParsers[0]);
     }
+
+};
+
+// RECURSION COMBINATORS
+// will try to parse the given string until either its empty
+// or it fails.
+// Returns the concatenated results
+export function many <A> ( parser: Parser<A> ) : Parser<A[]> {
+
+    const _parser = pplus(many1(parser), unit([]));
+    return mp( cs => {
+    
+        return _parser(cs); 
+    
+    });
+
+};
+
+// returns the result of applying once or more the given parser
+// to an input
+export function many1 <A> ( parser: Parser<A> ) : Parser<A[]> {
+
+    const manyParser = many(parser);
+    return parser.bind( r => manyParser.bind( others => unit(concat([r], others)) ));
 
 };
