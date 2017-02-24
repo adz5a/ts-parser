@@ -1,5 +1,5 @@
 import { Parser, item, seq, mp, plus, pplus, zero, sat, char, string, many, many1 } from "./index";
-import { deepEqual, ok } from "assert";
+import { equal, deepEqual, ok } from "assert";
 
 describe("parser.item", function () {
 
@@ -220,9 +220,10 @@ describe("parser.many", function () {
 
     it("should concatenate the results", function () {
     
-        const parser = many(char("c"));
+        const parser = many1(char("c"));
         const res = parser("cccD");
-        ok(res.length === 1);
+        equal(res.length, 1);
+        console.log(res);
         deepEqual(
             res[0],
             ["ccc", "D"]

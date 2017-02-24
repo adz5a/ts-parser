@@ -95,19 +95,12 @@ export function zero <T> () {
 
 export function sat ( f:( (cs: string) => boolean ) ) : Parser<string> {
 
-    return mp( cs => {
-    
-        const result = item(cs);
-        if (result.length === 0) {
-        
-            return []; 
-        
+    return item.bind( e => {
+        if (f(e)) {
+            return unit(e);
         } else {
-        
-            return result.filter( res => f(res[0]) ); 
-        
+            return <Parser<string>>zero();
         }
-    
     });
 
 }
@@ -136,26 +129,8 @@ export function string ( s: string ) : any {
 
 };
 
-// RECURSION COMBINATORS
-// will try to parse the given string until either its empty
-// or it fails.
-// Returns the concatenated results
-export function many <A> ( parser: Parser<A> ) : Parser<A[]> {
 
-    const _parser = pplus(many1(parser), unit([]));
-    return mp( cs => {
-    
-        return _parser(cs); 
-    
-    });
+export var many1 = <A>(p:Parser<A>):Parser<A[]> => p.bind(x => many(p).bind(xs => unit([x].concat(xs))));
 
-};
 
-// returns the result of applying once or more the given parser
-// to an input
-export function many1 <A> ( parser: Parser<A> ) : Parser<A[]> {
-
-    const manyParser = many(parser);
-    return parser.bind( r => manyParser.bind( others => unit(concat([r], others)) ));
-
-};
+export var many = <A>(p:Parser<A>):Parser<A[]> => pplus(many1(p), unit([]));
