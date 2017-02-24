@@ -129,8 +129,10 @@ export function string ( s: string ) : any {
 
 };
 
+export function many1 <A> (parser: Parser<A>): Parser<A[]> {
+    return parser.bind(x => many(parser).bind(xs => unit([x].concat(xs))));
+}
 
-export var many1 = <A>(p:Parser<A>):Parser<A[]> => p.bind(x => many(p).bind(xs => unit([x].concat(xs))));
-
-
-export var many = <A>(p:Parser<A>):Parser<A[]> => pplus(many1(p), unit([]));
+export function many <A> (parser: Parser<A>): Parser<A[]> {
+    return pplus(many1(parser), unit([]));
+}
