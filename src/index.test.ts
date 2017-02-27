@@ -346,3 +346,21 @@ describe("chainl", function () {
         );
     });
 });
+
+describe("lexical.space", function () {
+    const space = many( sat(x => " " === x) );
+    it("should parse the starting spaces", function () {
+        const res = space("  a");
+        equal(res.length, 1);
+        deepEqual(
+            res[0],
+            [[" ", " "], "a"]
+        );
+    });
+});
+
+describe("lexical.addop", function () {
+    const addop = pplus(
+
+    );
+});
