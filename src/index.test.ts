@@ -1,4 +1,4 @@
-import { Parser, item, seq, mp, plus, pplus, zero, sat, char, string, many, many1 , sepby, sepby1} from "./index";
+import { Parser, unit, item, seq, mp, plus, pplus, zero, sat, char, string, many, many1 , sepby, sepby1, chainl1, chainl } from "./index";
 import { equal, deepEqual, ok } from "assert";
 
 describe("parser.item", function () {
@@ -294,6 +294,55 @@ describe("sepby", function () {
         );
     });
 
+}); 
+
+describe("chainl", function () {});
+
+describe("chainl1", function () {
+    const digit = sat(c => c >= "0" && c <= "9");
+    const parser = chainl1(
+        digit.bind( d => unit(parseInt(d)) ),
+            unit( (a: number, b: number) => a + b )
+    );
+
+    it("should parse digits and sum them up", function () {
+        const res = parser("123a");
+        equal(res.length, 1);
+        deepEqual(
+            res[0],
+            [ 6, "a" ]
+        );
+    });
+
+    it("should fail when it cannot parse", function () {
+        const res = parser("a123");
+        equal(res.length, 0);
+    });
 });
 
-describe("sepby1", function () {});
+describe("chainl", function () {
+    const digit = sat(c => c >= "0" && c <= "9");
+    const parser = chainl(
+        digit.bind( d => unit(parseInt(d)) ),
+        unit( (a: number, b: number) => a + b ),
+        1
+    );
+
+    it("should parse digits and sum them up", function () {
+        const res = parser("123a");
+        equal(res.length, 1);
+        deepEqual(
+            res[0],
+            [ 6, "a" ]
+        );
+    });
+
+    it("should return the default arg when failing to parse", function () {
+        const res = parser("a123");
+        equal(res.length, 1);
+        deepEqual(
+            res[0],
+            [ 1, "a123" ]
+        );
+    });
+});
