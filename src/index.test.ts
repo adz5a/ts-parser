@@ -220,20 +220,53 @@ describe("parser.many", function () {
 
     it("should concatenate the results", function () {
     
+        const parser = many(char("c"));
+        const res = parser("cccD");
+        equal(res.length, 1);
+        console.log(res);
+        deepEqual(
+            res[0],
+            [["c", "c", "c"], "D"]
+        );
+    
+    });
+
+    it("should return empty array when it cannot parse", function () {
+        const parser = many(char("c"));
+        const res = parser("D");
+        equal(res.length, 1);
+        deepEqual(
+            res[0],
+            [[], "D"]
+        );
+
+    });
+
+
+});
+
+describe("parser.many1", function () {
+
+    it("should concatenate the results", function () {
+    
         const parser = many1(char("c"));
         const res = parser("cccD");
         equal(res.length, 1);
         console.log(res);
         deepEqual(
             res[0],
-            ["ccc", "D"]
+            [["c", "c", "c"], "D"]
         );
     
     });
 
-    it("should return empty array when it cannot parse", function () {});
+    it("should fail when it cannot parse", function () {
+        const parser = many1(char("c"));
+        const res = parser("D");
+        equal(res.length, 0);
 
-    it("should return empty array when it cannot parse", function () {});
+    });
 
 
 });
+
