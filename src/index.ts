@@ -136,3 +136,13 @@ export function many1 <A> (parser: Parser<A>): Parser<A[]> {
 export function many <A> (parser: Parser<A>): Parser<A[]> {
     return pplus(many1(parser), unit([]));
 }
+
+// Parse repeated applications of a parser p, separated by applications
+// of a parser *sep* whose result values are thrown away
+export function sepby <A, B> ( p: Parser<A>, sep: Parser<B> ): Parser<A[]> {
+    return pplus(sepby1(p, sep), unit([]));
+}
+
+export function sepby1 <A, B> ( p: Parser<A>, sep: Parser<B> ): Parser<A[]> {
+    return p.bind(cs => many(sep.bind(_ => p)).bind(xs => unit([cs].concat(xs))));
+}

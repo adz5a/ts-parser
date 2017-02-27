@@ -1,4 +1,4 @@
-import { Parser, item, seq, mp, plus, pplus, zero, sat, char, string, many, many1 } from "./index";
+import { Parser, item, seq, mp, plus, pplus, zero, sat, char, string, many, many1 , sepby, sepby1} from "./index";
 import { equal, deepEqual, ok } from "assert";
 
 describe("parser.item", function () {
@@ -264,9 +264,36 @@ describe("parser.many1", function () {
         const parser = many1(char("c"));
         const res = parser("D");
         equal(res.length, 0);
-
     });
 
 
 });
 
+describe("sepby", function () {
+    const lower = sat(c => c >= "a" && c <= "z");
+    const upper = sat(c => c >= "A" && c <= "Z");
+    const letter = plus(lower, upper);
+    const digit = sat(c => c >= "0" && c <= "9");
+    const parser = sepby(letter, digit);
+    
+    it("should parse letters separated by digits with no trailing digit", function () {
+        const res = parser("a1b2c");
+        equal(res.length, 1);
+        deepEqual(
+            res[0],
+            [ ["a", "b", "c"], ""]
+        );
+    });
+
+    it("should parse letters separated by digits with trailing digit", function () {
+        const res = parser("a1b2c3");
+        equal(res.length, 1);
+        deepEqual(
+            res[0],
+            [ ["a", "b", "c"], "3"]
+        );
+    });
+
+});
+
+describe("sepby1", function () {});
