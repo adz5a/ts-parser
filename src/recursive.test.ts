@@ -10,7 +10,6 @@ describe("parser.string", function () {
 
         const result = parser("helloWorld");
 
-        console.log( result.length );
         ok(result.length === 1);
         deepEqual(
             result[0],
@@ -50,7 +49,6 @@ describe("parser.many", function () {
         const parser = many(char("c"));
         const res = parser("cccD");
         equal(res.length, 1);
-        console.log(res);
         deepEqual(
             res[0],
             [["c", "c", "c"], "D"]
@@ -79,7 +77,6 @@ describe("parser.many1", function () {
         const parser = many1(char("c"));
         const res = parser("cccD");
         equal(res.length, 1);
-        console.log(res);
         deepEqual(
             res[0],
             [["c", "c", "c"], "D"]
@@ -123,8 +120,6 @@ describe("sepby", function () {
 
 }); 
 
-describe("chainl", function () {});
-
 describe("chainl1", function () {
     const digit = sat(c => c >= "0" && c <= "9");
     const parser = chainl1(
@@ -141,9 +136,17 @@ describe("chainl1", function () {
         );
     });
 
-    it("should fail when it cannot parse", function () {
-        const res = parser("a123");
+    it("should fail when it cannot parse", function () { const res = parser("a123");
         equal(res.length, 0);
+    });
+
+    it("should return the first value if there is only one", function () {
+        const res = parser("1");
+        equal(res.length, 1);
+        deepEqual(
+            res[0],
+            [ 1, "" ]
+        );
     });
 });
 
@@ -173,4 +176,3 @@ describe("chainl", function () {
         );
     });
 });
-
