@@ -118,6 +118,23 @@ describe("sepby", function () {
         );
     });
 
+    it("should parse the first letter", function () {
+        const res = parser("ab2c");
+        equal(res.length, 1);
+        deepEqual(
+            res[0],
+            [ ["a"], "b2c" ]
+        );
+    });
+    
+    it("should parse the 1st digit and throw it, returns empty result and consumes 0 chars", function () {
+        const res = parser("1ab2c");
+        equal(res.length, 1);
+        deepEqual(
+            res[0],
+            [ [], "1ab2c" ]
+        );
+    });
 }); 
 
 describe("chainl1", function () {
